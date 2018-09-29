@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using LibScs;
+using LibJvCore;
+using libJvKaisaiCore;
 
 namespace JvFunction
 {
@@ -89,12 +91,14 @@ namespace JvFunction
     {
         //インスタンス宣言
         JvIfCom JvCom = new JvIfCom();
-
+        JvKaisaiCore JvKaisai = new JvKaisaiCore();
 
         //グローバル配列定義
         String[] NameRc = new string[3];
 
-        //Form1：開催競馬場データの取得
+        /** ******************************* 
+        * Form1からの初期化処理(開催競馬場の取得)
+        **********************************/
         public Boolean JvComMain(String date)
         {
             int ret = 0;
@@ -103,8 +107,8 @@ namespace JvFunction
             ret = JvCom.IfJvInit("UNKNOWN");
             if (ret != 0) return (false);
 
-            String datespec = "RACE"; date = "20180920000000";
-            int opKind = 2; int ReadCount = 0; int DownloadCount = 0;
+            String datespec = "RACE"; date = "20180928000000";
+            int opKind = 1; int ReadCount = 0; int DownloadCount = 0; int ReadCounter = 0 ;
             String LastTime;
 
             ret = JvCom.IfJvOpen(datespec, date, opKind, ref ReadCount, ref DownloadCount, out LastTime);
@@ -125,7 +129,15 @@ namespace JvFunction
                 }
 
                 String RecordSpec = Buffer.Substring(0, 2);
+                if(RecordSpec != "RA")
+                {
+                    JvCom.IfJvSkip();
+                    continue;
+                }
                 libScs.LibScsMain(RecordSpec, ref Buffer, ref RaceCource);
+                JvKaisai.setCourceFirst(RaceCource);
+                LibJvKaisaiCore.setCourceFirst(RaceCource);
+                UpdateForm1StatusBar("開催情報取得中(" + (ReadCounter++ / ret)*100 + "%/100%)");
 
             } while (JvEndFlag);
 
@@ -135,6 +147,23 @@ namespace JvFunction
 
             JvCom.IfJvClose();
             return (true);
+        }
+
+        /** ******************************* 
+         * Form1 のステータスバーを更新する
+         **********************************/
+         void UpdateForm1StatusBar(String Msg)
+        {
+            Form1 InitForm = new Form1();
+            InitForm.UpdateStatusBar(Msg);
+        }
+
+       /** ******************************* 
+       * 開催競馬場データの取得(Cast)
+       **********************************/
+        public int castGetRaceCource(ref JvKaisaiCore.KAISAI_RC cast)
+        {
+            return (JvKaisai.getKaisaiOneDay(ref cast));          
         }
 
     }

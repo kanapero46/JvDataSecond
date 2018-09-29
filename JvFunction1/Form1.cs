@@ -19,6 +19,8 @@ namespace JvFunction
 
         //インスタンス宣言
         Main main = new Main();     //メインクラスのオブジェクト宣言
+        JvIfCom JvCom = new JvIfCom();
+
 
 
         public Form1()
@@ -38,24 +40,44 @@ namespace JvFunction
 
             /* インプットデータから */
             statusData = main.JvComMain(date);
-
+            JvKaisaiCore.KAISAI_RC kaisai;
+            //libJvKaisaiCore.LibJvKaisaiCore.KAISAI_RC kaisai;
+            kaisai.Set = false; kaisai.Cource1 = ""; kaisai.Cource2 = ""; kaisai.Cource3 = "";
+            int res = main.castGetRaceCource(ref kaisai);
             //ボタンの有効化
-            for (int idx = 0; idx <= 2; idx++)
+            if (res != 0)
             {
-                //EnableButtonFunction(main.getJomei(idx));
-            }
+                 switch(res)
+                {
+                    case 1:
+                        EnableButtonFunction(kaisai.Cource1);
+                        break;
+                    case 2:
+                        EnableButtonFunction(kaisai.Cource1);
+                        EnableButtonFunction(kaisai.Cource2);
+                        break;
+                    case 3:
+                        EnableButtonFunction(kaisai.Cource1);
+                        EnableButtonFunction(kaisai.Cource2);
+                        EnableButtonFunction(kaisai.Cource3);
+                        break;
+                }
 
-            /* ステータスバーの文字修正 */
-            if (statusData == true)
-            {
-                statusBar1.Text = "競馬場名をクリックすると、開催情報を取得することが出来ます。";
+                /* ステータスバーの文字修正 */
+                if (statusData == true)
+                {
+                    statusBar1.Text = "競馬場名をクリックすると、開催情報を取得することが出来ます。";
+                }
+                else
+                {
+                    statusBar1.Text = "開催情報の取得に失敗しました。";
+                }
             }
             else
             {
                 statusBar1.Text = "開催情報の取得に失敗しました。";
             }
-
-            axJVLink1.JVClose();
+            JvCom.IfJvClose();
         }
 
 
@@ -106,6 +128,14 @@ namespace JvFunction
         private void axJVLink2_JVEvtPay(object sender, AxJVDTLabLib._IJVLinkEvents_JVEvtPayEvent e)
         {
 
+        }
+
+        /** ******************************* 
+         * 外部からステータスバーを更新する
+         **********************************/
+         public void UpdateStatusBar(String msg)
+        {
+            statusBar1.Text = msg;
         }
     }
 }

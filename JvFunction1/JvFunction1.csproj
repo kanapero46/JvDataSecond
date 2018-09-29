@@ -57,6 +57,7 @@
     <Compile Include="JvIfCom.Designer.cs">
       <DependentUpon>JvIfCom.cs</DependentUpon>
     </Compile>
+    <Compile Include="JvKaisaiCore.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

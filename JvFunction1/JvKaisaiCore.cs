@@ -2,7 +2,8 @@
 
 public class JvKaisaiCore
 {
-    struct KAISAI_RC {
+    public struct KAISAI_RC
+    {
         public Boolean Set;
         public String Cource1;
         public String Cource2;
@@ -19,9 +20,9 @@ public class JvKaisaiCore
     public void setCourceFirst(String Cource)
     {
         //登録済みデータとの比較
-        try { if (Cource.Equals(FirstKaisai.Cource1)) return; }catch(NullReferenceException e) { FirstKaisai.Set = true; FirstKaisai.Cource1 = Corce; }
-        try { if (Cource.Equals(FirstKaisai.Cource2)) return; }catch(NullReferenceException e) { FirstKaisai.Set = true; FirstKaisai.Cource2 = Corce; }
-        try { if (Cource.Equals(FirstKaisai.Cource3)) return; }catch(NullReferenceException e) { FirstKaisai.Set = true; FirstKaisai.Cource3 = Corce; }
+        if (Cource.Equals(FirstKaisai.Cource1)) { return; } else if (FirstKaisai.Cource1 == null) { FirstKaisai.Set = true; FirstKaisai.Cource1 = Cource; return; }
+        if (Cource.Equals(FirstKaisai.Cource2)) { return; } else if (FirstKaisai.Cource2 == null) { FirstKaisai.Set = true; FirstKaisai.Cource2 = Cource; return; }
+        if (Cource.Equals(FirstKaisai.Cource3)) { return; } else if (FirstKaisai.Cource3 == null) { FirstKaisai.Set = true; FirstKaisai.Cource3 = Cource; return;}
     }
 
     /** ******************************* 
@@ -50,12 +51,11 @@ public class JvKaisaiCore
     {
         if (FirstKaisai.Set == false) return 0;
         pOut = FirstKaisai;
+        int res = 0;
 
-        int res = ((FirstKaisai.Cource1.Length) >= 1 ? 1 : 0)
-                 + ((FirstKaisai.Cource2.Length) >= 1 ? 1 : 0)
-                 + ((FirstKaisai.Cource3.Length) >= 1 ? 1 : 0);
-
+        try { res += ((FirstKaisai.Cource1.Length) >= 1 ? 1 : 0); } catch(NullReferenceException e) { return (res); }
+        try { res += ((FirstKaisai.Cource2.Length) >= 1 ? 1 : 0); } catch (NullReferenceException e) { return (res); }
+        try { res += ((FirstKaisai.Cource3.Length) >= 1 ? 1 : 0); } catch (NullReferenceException e) { return (res); }
         return (res);
-
     }
 }

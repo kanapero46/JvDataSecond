@@ -22,7 +22,16 @@ namespace LibScs
                     if (JvConv.JvConvJyoCdToString(JvSche.id.JyoCD, ref res) == 0) return 0; //競馬場コードが不明のときはエラー
                     Cource = res;
                     return 1;
-            
+
+                case "RA":
+                    JVData_Struct.JV_RA_RACE JvRace = new JVData_Struct.JV_RA_RACE();
+                    conv.JvConv JvConv1 = new conv.JvConv();
+                    JvRace.SetDataB(ref Buff);
+                    String resRA = "";
+                    if (JvConv1.JvConvJyoCdToString(JvRace.id.JyoCD, ref resRA) == 0) return 0; //競馬場コードが不明のときはエラー
+                    Cource = resRA;
+                    return 1;
+
             }
             return 1;
         }
